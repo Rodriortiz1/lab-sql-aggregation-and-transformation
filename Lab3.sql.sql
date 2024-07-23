@@ -9,26 +9,11 @@ FROM film;
 --2. You need to gain insights related to rental dates:
 SELECT DATEDIFF(MAX(rental_date), MIN(rental_date)) AS days_operating
 FROM rental;
-SELECT 
-    rental_id, 
-    rental_date,
-    customer_id,
-    return_date,
-    staff_id,
-    MONTH(rental_date) AS rental_month,
-    DAYOFWEEK(rental_date) AS rental_weekday
+SELECT *, DATE_FORMAT(rental_date, '%M') AS MONTH, DATE_FORMAT(rental_date, '%W') AS WEEKDAY
 FROM rental
 LIMIT 20;
-SELECT 
-    rental_id, 
-    rental_date,
-    customer_id,
-    return_date,
-    staff_id,
-CASE 
-    WHEN DAYOFWEEK (rental_date) BETWEEN 1 AND 5 THEN 'Workday'
-    ELSE "Weekend"
-END AS "day_type" FROM rental;
+SELECT *, CASE WHEN DATE_FORMAT(rental_date, '%W') IN ('Saturday', 'Sunday') THEN 'weekend' ELSE 'workday' END AS day_type
+FROM rental;
 -- 3.You need to ensure that customers can easily access information about the movie collection. To achieve this, retrieve the film titles and their rental duration. If any rental duration value is NULL, replace it with the string 'Not Available'. Sort the results of the film title in ascending order.
 SELECT 
     title, 
